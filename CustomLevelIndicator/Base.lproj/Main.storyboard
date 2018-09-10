@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11134"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -673,7 +675,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="CustomLevelIndicator" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -688,7 +690,7 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-			<connections>
+                        <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
                     </window>
@@ -703,11 +705,112 @@
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="CustomLevelIndicator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wZq-8I-gCo">
+                                <rect key="frame" x="385" y="13" width="81" height="32"/>
+                                <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="dM1-cA-XMX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="draw:" target="XfG-lQ-9wD" id="JmC-z4-ud3"/>
+                                </connections>
+                            </button>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="raS-7v-vKt">
+                                <rect key="frame" x="70" y="21" width="128" height="19"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="J9K-ch-VWG"/>
+                                <connections>
+                                    <action selector="sliderChanged:" target="XfG-lQ-9wD" id="VPC-Za-tv8"/>
+                                </connections>
+                            </slider>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CHz-pw-IUU">
+                                <rect key="frame" x="70" y="85" width="128" height="19"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="124" id="kR1-QC-sgE"/>
+                                </constraints>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="90" tickMarkPosition="above" sliderType="linear" id="Ukp-4h-1b1"/>
+                            </slider>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAo-wg-Pgr">
+                                <rect key="frame" x="231" y="23" width="36" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="Level" id="1f4-7r-2aN">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jzx-6j-Gqv">
+                                <rect key="frame" x="231" y="86" width="34" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="Peak" id="swO-eg-5LL">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <box autoresizesSubviews="NO" wantsLayer="YES" boxType="custom" borderType="line" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="U6u-c7-cud">
+                                <rect key="frame" x="2" y="197" width="476" height="76"/>
+                                <view key="contentView" id="Wy1-qn-dtA">
+                                    <rect key="frame" x="1" y="1" width="474" height="74"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Lwd-SI-AWA" customClass="LevelIndicator" customModule="CustomLevelIndicator" customModuleProvider="target">
+                                            <rect key="frame" x="20" y="20" width="434" height="9"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
+                                                    <integer key="value" value="5"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
+                                                    <real key="value" value="0.59999999999999998"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_criticalLevel">
+                                                    <real key="value" value="0.80000000000000004"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </customView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="Lwd-SI-AWA" secondAttribute="trailing" constant="20" symbolic="YES" id="Jdg-BY-EQE"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="leading" secondItem="Wy1-qn-dtA" secondAttribute="leading" constant="20" symbolic="YES" id="P9T-RD-hab"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="UUJ-bN-Yk8"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="Z35-Dh-0pQ"/>
+                                        <constraint firstAttribute="bottom" secondItem="Lwd-SI-AWA" secondAttribute="bottom" constant="20" symbolic="YES" id="gWi-j4-KqK"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="zgU-tP-nic"/>
+                                    </constraints>
+                                </view>
+                            </box>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Jzx-6j-Gqv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EAo-wg-Pgr" secondAttribute="leading" id="3E3-4H-6Bv"/>
+                            <constraint firstItem="CHz-pw-IUU" firstAttribute="centerY" secondItem="Jzx-6j-Gqv" secondAttribute="centerY" id="BM6-Hn-Eug"/>
+                            <constraint firstItem="U6u-c7-cud" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="-3" id="CHw-Z0-GCY"/>
+                            <constraint firstItem="EAo-wg-Pgr" firstAttribute="top" secondItem="Jzx-6j-Gqv" secondAttribute="bottom" constant="46" id="Io4-Hb-ZvC"/>
+                            <constraint firstAttribute="trailing" secondItem="Jzx-6j-Gqv" secondAttribute="trailing" constant="217" id="Lej-Tu-Rvk"/>
+                            <constraint firstItem="Jzx-6j-Gqv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CHz-pw-IUU" secondAttribute="trailing" symbolic="YES" id="PLi-sl-Ho4"/>
+                            <constraint firstItem="raS-7v-vKt" firstAttribute="baseline" secondItem="EAo-wg-Pgr" secondAttribute="baseline" id="Q74-3c-wpD"/>
+                            <constraint firstItem="wZq-8I-gCo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="RJu-h8-Tt3"/>
+                            <constraint firstAttribute="bottom" secondItem="wZq-8I-gCo" secondAttribute="bottom" constant="20" symbolic="YES" id="Stl-lq-sCN"/>
+                            <constraint firstAttribute="trailing" secondItem="EAo-wg-Pgr" secondAttribute="trailing" constant="215" id="TZG-rr-qse"/>
+                            <constraint firstItem="CHz-pw-IUU" firstAttribute="leading" secondItem="raS-7v-vKt" secondAttribute="leading" id="WTZ-88-RNM"/>
+                            <constraint firstItem="Jzx-6j-Gqv" firstAttribute="top" secondItem="U6u-c7-cud" secondAttribute="bottom" constant="94" id="YM1-7f-Gee"/>
+                            <constraint firstItem="U6u-c7-cud" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="2" id="anX-ql-Ywx"/>
+                            <constraint firstAttribute="trailing" secondItem="wZq-8I-gCo" secondAttribute="trailing" constant="20" symbolic="YES" id="eyc-8p-wYy"/>
+                            <constraint firstItem="CHz-pw-IUU" firstAttribute="trailing" secondItem="raS-7v-vKt" secondAttribute="trailing" id="fWA-DG-aa4"/>
+                            <constraint firstItem="U6u-c7-cud" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="gww-nv-oWU"/>
+                            <constraint firstItem="CHz-pw-IUU" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="72" id="hfq-2v-W9U"/>
+                            <constraint firstItem="EAo-wg-Pgr" firstAttribute="baseline" secondItem="wZq-8I-gCo" secondAttribute="baseline" id="tJ4-dh-2iB"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="_level" destination="raS-7v-vKt" id="E3n-zU-ttR"/>
+                        <outlet property="_levelIndicator" destination="Lwd-SI-AWA" id="cua-Ab-H3o"/>
+                        <outlet property="_levelLabel" destination="EAo-wg-Pgr" id="dlc-GV-xoX"/>
+                        <outlet property="_peak" destination="CHz-pw-IUU" id="1ts-8J-OdO"/>
+                        <outlet property="_peakLabel" destination="Jzx-6j-Gqv" id="j2F-RD-3ba"/>
+                        <outlet property="box" destination="U6u-c7-cud" id="syr-ia-JMm"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
