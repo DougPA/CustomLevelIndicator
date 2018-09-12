@@ -11,119 +11,157 @@ import Cocoa
 class LevelIndicator: NSView {
   
   private var _path                         = NSBezierPath()
+  private var _framePath                    = NSBezierPath()
 
-  @IBInspectable var _numberOfSegments      : Int = 0
+  @IBInspectable var _numberOfSegments      : Int = 5
+  @IBInspectable var _min                   : CGFloat = 0
+  @IBInspectable var _max                   : CGFloat = 100
   @IBInspectable var _frameColor            : NSColor = NSColor(red: 0.2, green: 0.2, blue: 0.8, alpha: 1.0)
   @IBInspectable var _backgroundColor       : NSColor = NSColor(red: 0.1, green: 1.0, blue: 0.1, alpha: 0.5)
-  @IBInspectable var _barColor              : NSColor = NSColor.systemGreen
+  @IBInspectable var _normalColor           : NSColor = NSColor.systemGreen
   @IBInspectable var _warningColor          : NSColor = NSColor.systemYellow
   @IBInspectable var _criticalColor         : NSColor = NSColor.systemRed
-  @IBInspectable var _warningLevel          : CGFloat = 0.8
-  @IBInspectable var _criticalLevel         : CGFloat = 0.9
+  @IBInspectable var _warningLevel          : CGFloat = 80
+  @IBInspectable var _criticalLevel         : CGFloat = 90
+  @IBInspectable var _type                  : Int = 0       // kStandard or kSMeter
+  @IBInspectable var _captions              : String = "1, 2"
+  @IBInspectable var _level                 : CGFloat = 0.0
+  @IBInspectable var _peak                  : CGFloat = 0.0
 
   private var _barInset                     : CGFloat = 0.0
   private var _barHeight                    : CGFloat = 0.0
   private var _lineWidth                    : CGFloat = 3.0
-  private var _level                        : CGFloat = 0.0
-  private var _peak                         : CGFloat = 0.0
+  private var _range                        : CGFloat = 0.0
+  private var _criticalPercent              : CGFloat = 0.0
+  private var _warningPercent               : CGFloat = 0.0
 
   private let kPeakWidth                    : CGFloat = 0.02
-
+  private let kStandard                     : Int = 0
+  private let kSMeter                       : Int = 1
+  
+  // ----------------------------------------------------------------------------
+  // MARK: - Initialization
+  
   required init?(coder decoder: NSCoder) {
     super.init(coder: decoder)
 
     assert(frame.size.height >= 5.0, "Frame height \(frame.size.height) < 5.0")
     
     // determine the appropriate sizes
-    if frame.size.height < 10.00 {
+    if _type == kSMeter {
       
+      // S-Meter type
       _lineWidth = 0
       _barInset = 0
       _barHeight = frame.size.height
       
     } else {
       
+      // standard bar type
       _lineWidth = frame.size.height * 0.1
       _barInset = 2 * _lineWidth
       _barHeight = frame.size.height - (2 * _barInset)
     }
+    
+    _range = _max - _min
+    _criticalPercent = (_criticalLevel - _min) / _range
+    _warningPercent = (_warningLevel - _min) / _range
   }
+  
+  // ----------------------------------------------------------------------------
+  // MARK: - Overridden Methods
   
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
     
-    if _lineWidth > 0.0 {
+    // draw the frame
+    if _type == kStandard {
       // set Line Width & Color
-      _path.lineWidth = _lineWidth
+      _framePath.lineWidth = _lineWidth
       _frameColor.set()
       
       // create the top & bottom line
-      _path.hLine(at: dirtyRect.size.height, fromX: 0, toX: dirtyRect.size.width)
-      _path.hLine(at: 0, fromX: 0, toX: dirtyRect.size.width)
+      _framePath.hLine(at: dirtyRect.size.height, fromX: 0, toX: dirtyRect.size.width)
+      _framePath.hLine(at: 0, fromX: 0, toX: dirtyRect.size.width)
       
       // create the vertical hash marks
       let segmentWidth = dirtyRect.size.width/CGFloat(_numberOfSegments)
-      _path.vLine(at: 0, fromY: dirtyRect.size.height - _barInset , toY: _barInset)
+      _framePath.vLine(at: 0, fromY: dirtyRect.size.height - _barInset , toY: _barInset)
       for i in 1..._numberOfSegments {
-        _path.vLine(at: segmentWidth * CGFloat(i), fromY: dirtyRect.size.height - _barInset, toY: _barInset)
+        _framePath.vLine(at: segmentWidth * CGFloat(i), fromY: dirtyRect.size.height - _barInset, toY: _barInset)
       }
-      // draw outline
-      _path.stroke()
+      _path.append(_framePath)
     }
-    
+
     // create the bar
-    var remainingLevel = _level
+    let levelPercent = (_level - _min) / _range
+    let peakPercent = (_peak - _min) / _range
+    var remainingPercent = levelPercent
     
-    switch remainingLevel {
-    case _criticalLevel...:
+    switch remainingPercent {
+    case _criticalPercent...:
+      
       // draw the critical section
-      let width = (remainingLevel - _criticalLevel) * dirtyRect.size.width
-      let rect = NSRect(origin: CGPoint(x: _criticalLevel * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
-      _path.fillRect(rect, withColor: _criticalColor, andAlpha: 0.9)
+      let width = (remainingPercent - _criticalPercent) * dirtyRect.size.width
+      let rect = NSRect(origin: CGPoint(x: _criticalPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      // append the critical bar
+      _path.append( createBar(at: rect, color: _criticalColor) )
 
-      remainingLevel = _criticalLevel
+      remainingPercent = _criticalPercent
       fallthrough
 
-    case _warningLevel..<_criticalLevel:
+    case _warningPercent..<_criticalPercent:
+      
       // draw the warning section
-      let width = (remainingLevel - _warningLevel) * dirtyRect.size.width
-      let rect = NSRect(origin: CGPoint(x: _warningLevel * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
-      _path.fillRect(rect, withColor: _warningColor, andAlpha: 0.6)
+      let width = (remainingPercent - _warningPercent) * dirtyRect.size.width
+      let rect = NSRect(origin: CGPoint(x: _warningPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      // append the warning bar
+      _path.append( createBar(at: rect, color: _warningColor) )
 
-      remainingLevel = _warningLevel
+      remainingPercent = _warningPercent
       fallthrough
 
-    case 0..<_warningLevel:
+    case 0..<_warningPercent:
+      
       // draw the normal section
-      let width = remainingLevel * dirtyRect.size.width
+      let width = remainingPercent * dirtyRect.size.width
       let rect = NSRect(origin: CGPoint(x: 0.0, y: _barInset), size: CGSize(width: width, height: _barHeight))
-      _path.fillRect(rect, withColor: _barColor, andAlpha: 0.3)
+      // append the normal bar
+      _path.append( createBar(at: rect, color: _normalColor) )
 
-    default:
+    default:  // should never occur
       break
     }
     
+    // only draw the peak if non-zero
     if _peak > 0.0 {
-      // draw the peak
+      
+      // calculate the peak location & size
       let width = dirtyRect.size.width * kPeakWidth
-      let rect = NSRect(origin: CGPoint(x: (_peak * dirtyRect.size.width) - kPeakWidth, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      let rect = NSRect(origin: CGPoint(x: (peakPercent * dirtyRect.size.width) - kPeakWidth, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      
+      // determine the peak color
       var peakColor: NSColor
-      switch _peak {
-        case _criticalLevel...:
+      switch peakPercent {
+      case _criticalPercent...:
         peakColor = _criticalColor
-        case _warningLevel..<_criticalLevel:
+      case _warningPercent..<_criticalPercent:
         peakColor = _warningColor
       default:
-        peakColor = _barColor
+        peakColor = _normalColor
       }
-      _path.fillRect(rect, withColor: peakColor, andAlpha: 0.9)
+      // append the peak bar
+      _path.append( createBar(at: rect, color: peakColor) )
     }
-    
-    // clear the path
+    // draw & clear
+    _path.stroke()
     _path.removeAllPoints()
   }
   
-  /// e the Level & Peak
+  // ----------------------------------------------------------------------------
+  // MARK: - Public Methods
+  
+  /// Update the Level & Peak values
   ///
   /// - Parameters:
   ///   - level:            average level
@@ -131,11 +169,37 @@ class LevelIndicator: NSView {
   ///
   public func updateLevel(_ level: CGFloat, peak: CGFloat) {
   
-      _level = level
-      _peak = peak
-      needsDisplay = true
+    _level = level
+    _peak = peak
+    
+    // force a redraw
+    needsDisplay = true
+  }
+  
+  // ----------------------------------------------------------------------------
+  // MARK: - Private Methods
+  
+  /// Create a filled rect area
+  ///
+  /// - Parameters:
+  ///   - rect:             the area
+  ///   - color:            an NSColor
+  /// - Returns:            the filled NSBezierPath
+  ///
+  private func createBar(at rect: NSRect, color: NSColor) -> NSBezierPath {
+  
+    // create a path with the specified rect
+    let path = NSBezierPath(rect: rect)
+    
+    // fill it with color
+    color.setFill()
+    path.fill()
+    
+    return path
   }
 }
+
+
 
 
 extension NSBezierPath {
@@ -170,11 +234,11 @@ extension NSBezierPath {
   ///   - rect:           the rect
   ///   - color:          the fill color
   ///
-  func fillRect( _ rect: NSRect, withColor color: NSColor, andAlpha alpha: CGFloat = 1) {
-    
-    // fill the rectangle with the requested color and alpha
-    color.withAlphaComponent(alpha).setFill()
-    NSBezierPath.fill(rect)
-  }
+//  func fillRect( _ rect: NSRect, withColor color: NSColor, andAlpha alpha: CGFloat = 1) {
+//
+//    // fill the rectangle with the requested color and alpha
+//    color.setFill()
+//    self.fill(rect)
+//  }
   
 }

@@ -40,7 +40,7 @@ class ViewController                        : NSViewController {
   
   @IBAction func draw(_ sender: Any) {
     
-    _levelIndicator?.updateLevel(CGFloat(_level.floatValue/100.0), peak: CGFloat(_peak.floatValue/100.0))
+    _levelIndicator?.updateLevel(CGFloat(_level.floatValue), peak: CGFloat(_peak.floatValue))
   }
 }
 

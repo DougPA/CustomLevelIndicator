@@ -4,6 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -756,17 +757,80 @@
                                     <rect key="frame" x="1" y="1" width="474" height="74"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <stackView distribution="equalSpacing" orientation="horizontal" alignment="centerY" spacing="136" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vEB-rY-6dW">
+                                            <rect key="frame" x="20" y="51" width="433" height="17"/>
+                                            <subviews>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwL-yk-dMG">
+                                                    <rect key="frame" x="-2" y="0.0" width="44" height="17"/>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="-25Db" id="5Rj-J6-uB3">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wTv-aO-GcL">
+                                                    <rect key="frame" x="174" y="0.0" width="88" height="17"/>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Compression" id="des-2g-sEH">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="awV-Ky-ljm">
+                                                    <rect key="frame" x="394" y="0.0" width="41" height="17"/>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="        0" id="L6V-mz-d7K">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
+                                            </subviews>
+                                            <visibilityPriorities>
+                                                <integer value="1000"/>
+                                                <integer value="1000"/>
+                                                <integer value="1000"/>
+                                            </visibilityPriorities>
+                                            <customSpacing>
+                                                <real value="3.4028234663852886e+38"/>
+                                                <real value="3.4028234663852886e+38"/>
+                                                <real value="3.4028234663852886e+38"/>
+                                            </customSpacing>
+                                        </stackView>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Lwd-SI-AWA" customClass="LevelIndicator" customModule="CustomLevelIndicator" customModuleProvider="target">
-                                            <rect key="frame" x="20" y="20" width="434" height="9"/>
+                                            <rect key="frame" x="20" y="20" width="434" height="23"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="7"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
-                                                    <real key="value" value="0.59999999999999998"/>
+                                                    <real key="value" value="80"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_criticalLevel">
-                                                    <real key="value" value="0.80000000000000004"/>
+                                                    <real key="value" value="90"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_type">
+                                                    <integer key="value" value="0"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_level">
+                                                    <real key="value" value="0.0"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_peak">
+                                                    <real key="value" value="0.0"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="_barColor">
+                                                    <color key="value" red="0.0" green="1" blue="0.03011118862" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_minimum">
+                                                    <integer key="value" value="-25"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_maximum">
+                                                    <integer key="value" value="0"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_min">
+                                                    <real key="value" value="0.0"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_max">
+                                                    <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </customView>
@@ -774,12 +838,15 @@
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="Lwd-SI-AWA" secondAttribute="trailing" constant="20" symbolic="YES" id="Jdg-BY-EQE"/>
                                         <constraint firstItem="Lwd-SI-AWA" firstAttribute="leading" secondItem="Wy1-qn-dtA" secondAttribute="leading" constant="20" symbolic="YES" id="P9T-RD-hab"/>
-                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="UUJ-bN-Yk8"/>
-                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="Z35-Dh-0pQ"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="31" id="UUJ-bN-Yk8"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="31" id="Z35-Dh-0pQ"/>
+                                        <constraint firstItem="vEB-rY-6dW" firstAttribute="leading" secondItem="Lwd-SI-AWA" secondAttribute="leading" id="anS-8S-u4R"/>
                                         <constraint firstAttribute="bottom" secondItem="Lwd-SI-AWA" secondAttribute="bottom" constant="20" symbolic="YES" id="gWi-j4-KqK"/>
-                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="45" id="zgU-tP-nic"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="vEB-rY-6dW" secondAttribute="bottom" constant="8" symbolic="YES" id="q78-Nd-NZX"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="31" id="zgU-tP-nic"/>
                                     </constraints>
                                 </view>
+                                <color key="fillColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             </box>
                         </subviews>
                         <constraints>
