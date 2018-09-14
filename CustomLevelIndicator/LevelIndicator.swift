@@ -106,18 +106,17 @@ class LevelIndicator: NSView {
     let levelPercent = (level - _min) / _range
     var peakPercent = (peak - _min) / _range
     
-
     // create the bar
     var remainingPercent = levelPercent
     switch remainingPercent {
     case _criticalPercent...:
       
-      let criticalPercent = _isFlipped ? 1.0 - _criticalPercent : _criticalPercent
+      let percent = _isFlipped ? 1.0 - _criticalPercent : _criticalPercent
 
       // draw the critical section
       var width = (remainingPercent - _criticalPercent) * dirtyRect.size.width
       width = _isFlipped ? -width : width
-      let rect = NSRect(origin: CGPoint(x: criticalPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      let rect = NSRect(origin: CGPoint(x: percent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
       // append the critical bar
       _path.append( createBar(at: rect, color: _criticalColor) )
 

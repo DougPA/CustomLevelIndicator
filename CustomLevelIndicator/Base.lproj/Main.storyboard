@@ -820,7 +820,7 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_max">
                                                     <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="NO"/>
                                             </userDefinedRuntimeAttributes>
                                         </customView>
                                     </subviews>
