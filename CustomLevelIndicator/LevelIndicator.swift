@@ -10,6 +10,11 @@ import Cocoa
 
 class LevelIndicator: NSView {
   
+  public var level                          : CGFloat = 0.0 {
+    didSet { needsDisplay = true } }        // force a redraw
+  public var peak                           : CGFloat = 0.0 {
+    didSet { needsDisplay = true } }        // force a redraw
+
   private var _path                         = NSBezierPath()
   private var _framePath                    = NSBezierPath()
 
@@ -24,10 +29,9 @@ class LevelIndicator: NSView {
   @IBInspectable var _warningLevel          : CGFloat = 80
   @IBInspectable var _criticalLevel         : CGFloat = 90
   @IBInspectable var _type                  : Int = 0       // kStandard or kSMeter
-  @IBInspectable var _captions              : String = "1, 2"
-  @IBInspectable var _level                 : CGFloat = 0.0
-  @IBInspectable var _peak                  : CGFloat = 0.0
+  @IBInspectable var _isFlipped             : Bool = false
 
+  private var _zeroPoint                    : CGFloat = 0.0
   private var _barInset                     : CGFloat = 0.0
   private var _barHeight                    : CGFloat = 0.0
   private var _lineWidth                    : CGFloat = 3.0
@@ -35,7 +39,7 @@ class LevelIndicator: NSView {
   private var _criticalPercent              : CGFloat = 0.0
   private var _warningPercent               : CGFloat = 0.0
 
-  private let kPeakWidth                    : CGFloat = 0.02
+  private let kPeakWidth                    : CGFloat = 0.03
   private let kStandard                     : Int = 0
   private let kSMeter                       : Int = 1
   
@@ -46,6 +50,9 @@ class LevelIndicator: NSView {
     super.init(coder: decoder)
 
     assert(frame.size.height >= 5.0, "Frame height \(frame.size.height) < 5.0")
+  }
+  
+  override func viewWillDraw() {
     
     // determine the appropriate sizes
     if _type == kSMeter {
@@ -62,12 +69,14 @@ class LevelIndicator: NSView {
       _barInset = 2 * _lineWidth
       _barHeight = frame.size.height - (2 * _barInset)
     }
-    
     _range = _max - _min
     _criticalPercent = (_criticalLevel - _min) / _range
     _warningPercent = (_warningLevel - _min) / _range
+
+    // choose the bar's zero point
+    _zeroPoint = _isFlipped ? frame.size.width : 0.0
   }
-  
+
   // ----------------------------------------------------------------------------
   // MARK: - Overridden Methods
   
@@ -93,17 +102,22 @@ class LevelIndicator: NSView {
       _path.append(_framePath)
     }
 
-    // create the bar
-    let levelPercent = (_level - _min) / _range
-    let peakPercent = (_peak - _min) / _range
-    var remainingPercent = levelPercent
+    // normalize level to 0 - 100
+    let levelPercent = (level - _min) / _range
+    var peakPercent = (peak - _min) / _range
     
+
+    // create the bar
+    var remainingPercent = levelPercent
     switch remainingPercent {
     case _criticalPercent...:
       
+      let criticalPercent = _isFlipped ? 1.0 - _criticalPercent : _criticalPercent
+
       // draw the critical section
-      let width = (remainingPercent - _criticalPercent) * dirtyRect.size.width
-      let rect = NSRect(origin: CGPoint(x: _criticalPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      var width = (remainingPercent - _criticalPercent) * dirtyRect.size.width
+      width = _isFlipped ? -width : width
+      let rect = NSRect(origin: CGPoint(x: criticalPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
       // append the critical bar
       _path.append( createBar(at: rect, color: _criticalColor) )
 
@@ -112,9 +126,12 @@ class LevelIndicator: NSView {
 
     case _warningPercent..<_criticalPercent:
       
+      let percent = _isFlipped ? 1.0 - _warningPercent : _warningPercent
+
       // draw the warning section
-      let width = (remainingPercent - _warningPercent) * dirtyRect.size.width
-      let rect = NSRect(origin: CGPoint(x: _warningPercent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      var width = (remainingPercent - _warningPercent) * dirtyRect.size.width
+      width = _isFlipped ? -width : width
+      let rect = NSRect(origin: CGPoint(x: percent * dirtyRect.size.width, y: _barInset), size: CGSize(width: width, height: _barHeight))
       // append the warning bar
       _path.append( createBar(at: rect, color: _warningColor) )
 
@@ -124,8 +141,9 @@ class LevelIndicator: NSView {
     case 0..<_warningPercent:
       
       // draw the normal section
-      let width = remainingPercent * dirtyRect.size.width
-      let rect = NSRect(origin: CGPoint(x: 0.0, y: _barInset), size: CGSize(width: width, height: _barHeight))
+      var width = remainingPercent * dirtyRect.size.width
+      width = _isFlipped ? -width : width
+      let rect = NSRect(origin: CGPoint(x: _zeroPoint, y: _barInset), size: CGSize(width: width, height: _barHeight))
       // append the normal bar
       _path.append( createBar(at: rect, color: _normalColor) )
 
@@ -134,12 +152,16 @@ class LevelIndicator: NSView {
     }
     
     // only draw the peak if non-zero
-    if _peak > 0.0 {
+    if peakPercent > 0.0 {
+
+      peakPercent = min(peakPercent, 0.99)
+      let percent = _isFlipped ? 1.0 - peakPercent : peakPercent
       
       // calculate the peak location & size
-      let width = dirtyRect.size.width * kPeakWidth
-      let rect = NSRect(origin: CGPoint(x: (peakPercent * dirtyRect.size.width) - kPeakWidth, y: _barInset), size: CGSize(width: width, height: _barHeight))
-      
+      var width = dirtyRect.size.width * kPeakWidth
+      width = _isFlipped ? -width : width
+      let rect = NSRect(origin: CGPoint(x: (percent * dirtyRect.size.width) - kPeakWidth, y: _barInset), size: CGSize(width: width, height: _barHeight))
+
       // determine the peak color
       var peakColor: NSColor
       switch peakPercent {
@@ -161,20 +183,20 @@ class LevelIndicator: NSView {
   // ----------------------------------------------------------------------------
   // MARK: - Public Methods
   
-  /// Update the Level & Peak values
-  ///
-  /// - Parameters:
-  ///   - level:            average level
-  ///   - peak:             peak level
-  ///
-  public func updateLevel(_ level: CGFloat, peak: CGFloat) {
-  
-    _level = level
-    _peak = peak
-    
-    // force a redraw
-    needsDisplay = true
-  }
+//  /// Update the Level & Peak values
+//  ///
+//  /// - Parameters:
+//  ///   - level:            average level
+//  ///   - peak:             peak level
+//  ///
+//  public func updateLevel(_ level: CGFloat, peak: CGFloat) {
+//  
+//    _level = level
+//    _peak = peak
+//    
+//    // force a redraw
+//    needsDisplay = true
+//  }
   
   // ----------------------------------------------------------------------------
   // MARK: - Private Methods

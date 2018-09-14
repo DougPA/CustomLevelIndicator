@@ -733,7 +733,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="124" id="kR1-QC-sgE"/>
                                 </constraints>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="90" tickMarkPosition="above" sliderType="linear" id="Ukp-4h-1b1"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="110" doubleValue="90" tickMarkPosition="above" sliderType="linear" id="Ukp-4h-1b1"/>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAo-wg-Pgr">
                                 <rect key="frame" x="231" y="23" width="36" height="17"/>
@@ -811,20 +811,8 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_type">
                                                     <integer key="value" value="0"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_level">
-                                                    <real key="value" value="0.0"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_peak">
-                                                    <real key="value" value="0.0"/>
-                                                </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="color" keyPath="_barColor">
                                                     <color key="value" red="0.0" green="1" blue="0.03011118862" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_minimum">
-                                                    <integer key="value" value="-25"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_maximum">
-                                                    <integer key="value" value="0"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_min">
                                                     <real key="value" value="0.0"/>
@@ -832,6 +820,7 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_max">
                                                     <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                         </customView>
                                     </subviews>
@@ -855,7 +844,7 @@
                             <constraint firstItem="U6u-c7-cud" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="-3" id="CHw-Z0-GCY"/>
                             <constraint firstItem="EAo-wg-Pgr" firstAttribute="top" secondItem="Jzx-6j-Gqv" secondAttribute="bottom" constant="46" id="Io4-Hb-ZvC"/>
                             <constraint firstAttribute="trailing" secondItem="Jzx-6j-Gqv" secondAttribute="trailing" constant="217" id="Lej-Tu-Rvk"/>
-                            <constraint firstItem="Jzx-6j-Gqv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CHz-pw-IUU" secondAttribute="trailing" symbolic="YES" id="PLi-sl-Ho4"/>
+                            <constraint firstItem="Jzx-6j-Gqv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CHz-pw-IUU" secondAttribute="trailing" constant="8" symbolic="YES" id="PLi-sl-Ho4"/>
                             <constraint firstItem="raS-7v-vKt" firstAttribute="baseline" secondItem="EAo-wg-Pgr" secondAttribute="baseline" id="Q74-3c-wpD"/>
                             <constraint firstItem="wZq-8I-gCo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="RJu-h8-Tt3"/>
                             <constraint firstAttribute="bottom" secondItem="wZq-8I-gCo" secondAttribute="bottom" constant="20" symbolic="YES" id="Stl-lq-sCN"/>
