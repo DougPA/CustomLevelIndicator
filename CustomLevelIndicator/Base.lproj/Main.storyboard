@@ -723,7 +723,7 @@
                             </button>
                             <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="raS-7v-vKt">
                                 <rect key="frame" x="70" y="21" width="128" height="19"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="J9K-ch-VWG"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="above" sliderType="linear" id="J9K-ch-VWG"/>
                                 <connections>
                                     <action selector="sliderChanged:" target="XfG-lQ-9wD" id="VPC-Za-tv8"/>
                                 </connections>
@@ -733,7 +733,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="124" id="kR1-QC-sgE"/>
                                 </constraints>
-                                <sliderCell key="cell" state="on" alignment="left" maxValue="110" doubleValue="90" tickMarkPosition="above" sliderType="linear" id="Ukp-4h-1b1"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="above" sliderType="linear" id="Ukp-4h-1b1"/>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAo-wg-Pgr">
                                 <rect key="frame" x="231" y="23" width="36" height="17"/>
@@ -800,7 +800,7 @@
                                             <rect key="frame" x="20" y="20" width="434" height="23"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
-                                                    <integer key="value" value="7"/>
+                                                    <integer key="value" value="5"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
                                                     <real key="value" value="80"/>
@@ -811,16 +811,13 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_type">
                                                     <integer key="value" value="0"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="color" keyPath="_barColor">
-                                                    <color key="value" red="0.0" green="1" blue="0.03011118862" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_min">
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="NO"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_left">
                                                     <real key="value" value="0.0"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="_max">
+                                                <userDefinedRuntimeAttribute type="number" keyPath="_right">
                                                     <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="NO"/>
                                             </userDefinedRuntimeAttributes>
                                         </customView>
                                     </subviews>
