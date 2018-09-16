@@ -79,7 +79,18 @@ class LevelIndicator: NSView {
   
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
-    
+
+    if _isFlipped {
+      
+      assert(_criticalLevel <= _warningLevel &&
+        _warningLevel <= _right, "Invalid order")      // Critical -> Warning -> Right
+      
+    } else {
+      
+      assert(_left <= _warningLevel &&
+        _warningLevel <= _criticalLevel, "Invalid order")     // Left -> Warning -> Critical
+    }
+
     // draw the frame
     if _type == kStandard {
       // set Line Width & Color
@@ -101,107 +112,92 @@ class LevelIndicator: NSView {
 
     let warningPosition = ((_warningLevel - _left) / _range)  * dirtyRect.size.width
     let criticalPosition = ((_criticalLevel - _left) / _range)  * dirtyRect.size.width
-    let peakPosition = max( ((peak - _left) / _range)  * dirtyRect.size.width, kPeakWidth)
     
+    // create the bar
+    var remainingLevel = level
+    switch (isFlipped, remainingLevel) {
+    case (true, ..._criticalLevel):
+      
+      // append the critical section
+      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - criticalPosition
+      appendSection(at: criticalPosition, width: width, color: _criticalColor)
+      
+      remainingLevel = _criticalLevel
+      fallthrough
+      
+    case (true, _criticalLevel..._warningLevel):
+      
+      // append the warning section
+      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - warningPosition
+      appendSection(at: warningPosition, width: width, color: _warningColor)
+      
+      remainingLevel = _warningLevel
+      fallthrough
+      
+    case (true, _warningLevel...):
+      
+      // append the normal section
+      let width = ((remainingLevel) / _range) * dirtyRect.size.width
+      appendSection(at: _zeroPoint, width: width, color: _normalColor)
+      
+    case (false, _criticalLevel...):
+      
+      // append the critical section
+      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width) - criticalPosition
+      appendSection(at: criticalPosition, width: width, color: _criticalColor)
+      
+      remainingLevel = _criticalLevel
+      fallthrough
+      
+    case (false, _warningLevel..._criticalLevel):
+      
+      // append the warning section
+      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - warningPosition
+      appendSection(at: warningPosition, width: width, color: _warningColor)
+      
+      remainingLevel = _warningLevel
+      fallthrough
+      
+    case (false, ..._warningLevel):
+      
+      // append the normal section
+      let width = ((remainingLevel - _left) / _range) * dirtyRect.size.width
+      appendSection(at: _zeroPoint, width: width, color: _normalColor)
+      
+    default:  // should never occur
+      fatalError()
+    }
+    
+    var peakPosition : CGFloat = 0
     var peakColor: NSColor
 
     if _isFlipped {
-      // Flipped
-      
-      assert(_criticalLevel <= _warningLevel &&
-        _warningLevel <= _right, "Invalid order")      // Critical -> Warning -> Right
-      
-      // create the bar
-      var remainingLevel = level
-      switch remainingLevel {
-      case ..._criticalLevel:
-        
-        // append the critical section
-        let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width )  - criticalPosition
-        appendSection(at: criticalPosition, width: width, color: _criticalColor)
-
-        remainingLevel = _criticalLevel
-        fallthrough
-        
-      case _criticalLevel..._warningLevel:
-        
-        // append the warning section
-        let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width )  - warningPosition
-        appendSection(at: warningPosition, width: width, color: _warningColor)
-
-        remainingLevel = _warningLevel
-        fallthrough
-        
-      case _warningLevel...:
-        
-        // append the normal section
-        let width = ((remainingLevel) / _range) * dirtyRect.size.width
-        appendSection(at: dirtyRect.size.width, width: width, color: _normalColor)
-        
-      default:  // should never occur
-        break
-      }
-
-      // determine the peak color
-      switch peak {
-      case ..._criticalLevel:
-        peakColor = _criticalColor
-      case _criticalLevel..._warningLevel:
-        peakColor = _warningColor
-      default:
-        peakColor = _normalColor
-      }
-
+      peakPosition = ( max(peak, _left  + (0.005 * dirtyRect.size.width)) / _range ) * dirtyRect.size.width
     } else {
-      // NOT Flipped
-      
-      assert(_left <= _warningLevel &&
-        _warningLevel <= _criticalLevel, "Invalid order")     // Left -> Warning -> Critical
-      
-      // create the bar
-      var remainingLevel = level
-      switch remainingLevel {
-      case _criticalLevel...:
-        
-        // append the critical section
-        let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width) - criticalPosition
-        appendSection(at: criticalPosition, width: width, color: _criticalColor)
-        
-        remainingLevel = _criticalLevel
-        fallthrough
-        
-      case _warningLevel..._criticalLevel:
-        
-        // append the warning section
-        let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width )  - warningPosition
-        appendSection(at: warningPosition, width: width, color: _warningColor)
-
-        remainingLevel = _warningLevel
-        fallthrough
-        
-      case ..._warningLevel:
-        
-        // append the normal section
-        let width = ((remainingLevel - _left) / _range) * dirtyRect.size.width
-        appendSection(at: 0, width: width, color: _normalColor)
-
-      default:  // should never occur
-        break
-      }
-
-      // determine the peak color
-      switch peak {
-      case _criticalLevel...:
-        peakColor = _criticalColor
-      case _warningLevel..._criticalLevel:
-        peakColor = _warningColor
-      default:
-        peakColor = _normalColor
-      }
+      peakPosition = ( min(peak, _right - (0.005 * dirtyRect.size.width)) / _range ) * dirtyRect.size.width
     }
+    
+    Swift.print("left = \(_left), right = \(_right), peak = \(peak), peakPosition = \(peakPosition)")
+    
+    // determine the peak color
+    switch (_isFlipped, peak) {
+    case (true, ..._criticalLevel):
+      peakColor = _criticalColor
+    case (true, _criticalLevel..._warningLevel):
+      peakColor = _warningColor
+    
+    case (false, _criticalLevel...):
+      peakColor = _criticalColor
+    case (false, _warningLevel..._criticalLevel):
+      peakColor = _warningColor
+    
+    default:
+      peakColor = _normalColor
+    }
+
     // append the peak section
     appendSection(at: peakPosition, width: kPeakWidth, color: peakColor)
-
+    
     // draw & clear
     _path.stroke()
     _path.removeAllPoints()
@@ -210,6 +206,21 @@ class LevelIndicator: NSView {
   // ----------------------------------------------------------------------------
   // MARK: - Private Methods
   
+  /// Create a section & append it
+  ///
+  /// - Parameters:
+  ///   - position:         position of the level
+  ///   - width:            width of the bar
+  ///   - color:            color of the bar
+  ///
+  private func appendSection(at position: CGFloat, width: CGFloat, color: NSColor) {
+    
+    // construct its rect
+    let rect = NSRect(origin: CGPoint(x: position, y: _barInset),
+                      size: CGSize(width: width, height: _barHeight))
+    // create & append the section
+    _path.append( createBar(at: rect, color: color) )
+  }
   /// Create a filled rect area
   ///
   /// - Parameters:
@@ -227,15 +238,6 @@ class LevelIndicator: NSView {
     path.fill()
     
     return path
-  }
-
-  private func appendSection(at position: CGFloat, width: CGFloat, color: NSColor) {
-    
-    // construct its rect
-    let rect = NSRect(origin: CGPoint(x: position, y: _barInset),
-                      size: CGSize(width: width, height: _barHeight))
-    // create & append the section
-    _path.append( createBar(at: rect, color: color) )
   }
 }
 
