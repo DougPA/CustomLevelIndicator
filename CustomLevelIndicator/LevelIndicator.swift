@@ -18,9 +18,10 @@ class LevelIndicator: NSView {
   private var _path                         = NSBezierPath()
   private var _framePath                    = NSBezierPath()
 
-  @IBInspectable var _numberOfSegments      : Int = 5
-  @IBInspectable var _left                  : CGFloat = 0
-  @IBInspectable var _right                 : CGFloat = 100
+  @IBInspectable var _numberOfSegments      : Int = 4
+  @IBInspectable var _leftValue             : CGFloat = 0
+  @IBInspectable var _rightValue            : CGFloat = 100
+  
   @IBInspectable var _frameColor            : NSColor = NSColor(red: 0.2, green: 0.2, blue: 0.8, alpha: 1.0)
   @IBInspectable var _backgroundColor       : NSColor = NSColor(red: 0.1, green: 1.0, blue: 0.1, alpha: 0.5)
   @IBInspectable var _normalColor           : NSColor = NSColor.systemGreen
@@ -28,16 +29,16 @@ class LevelIndicator: NSView {
   @IBInspectable var _criticalColor         : NSColor = NSColor.systemRed
   @IBInspectable var _warningLevel          : CGFloat = 80
   @IBInspectable var _criticalLevel         : CGFloat = 90
-  @IBInspectable var _type                  : Int = 0       // kStandard or kSMeter
   @IBInspectable var _isFlipped             : Bool = false
 
-  private var _zeroPoint                    : CGFloat = 0.0
   private var _barInset                     : CGFloat = 0.0
   private var _barHeight                    : CGFloat = 0.0
   private var _lineWidth                    : CGFloat = 3.0
   private var _range                        : CGFloat = 0.0
   private var _criticalPercent              : CGFloat = 0.0
   private var _warningPercent               : CGFloat = 0.0
+  private var _criticalPosition             : CGFloat = 0.0
+  private var _warningPosition              : CGFloat = 0.0
 
   private let kPeakWidth                    : CGFloat = 5
   private let kStandard                     : Int = 0
@@ -54,24 +55,16 @@ class LevelIndicator: NSView {
   
   override func viewWillDraw() {
     
-    // determine the appropriate sizes
-    if _type == kSMeter {
-      
-      // S-Meter type
-      _lineWidth = 0
-      _barInset = 0
-      _barHeight = frame.size.height
-      
-    } else {
-      
-      // standard bar type
-      _lineWidth = frame.size.height * 0.1
-      _barInset = 2 * _lineWidth
-      _barHeight = frame.size.height - (2 * _barInset)
-    }
-    _range = _right - _left
-    // choose the bar's zero point
-    _zeroPoint = _isFlipped ? frame.size.width : 0.0
+    // standard bar type
+    _lineWidth = frame.size.height * 0.1
+    _barInset = 2 * _lineWidth
+    _barHeight = frame.size.height - (2 * _barInset)
+
+    _range = _rightValue - _leftValue
+    _warningPercent = ((_warningLevel - _leftValue) / _range)
+    _warningPosition = _warningPercent * frame.size.width
+    _criticalPercent = ((_criticalLevel - _leftValue) / _range)
+    _criticalPosition = _criticalPercent * frame.size.width
   }
 
   // ----------------------------------------------------------------------------
@@ -80,124 +73,69 @@ class LevelIndicator: NSView {
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
 
-    if _isFlipped {
-      
-      assert(_criticalLevel <= _warningLevel &&
-        _warningLevel <= _right, "Invalid order")      // Critical -> Warning -> Right
-      
-    } else {
-      
-      assert(_left <= _warningLevel &&
-        _warningLevel <= _criticalLevel, "Invalid order")     // Left -> Warning -> Critical
-    }
-
     // draw the frame
-    if _type == kStandard {
-      // set Line Width & Color
-      _framePath.lineWidth = _lineWidth
-      _frameColor.set()
-      
-      // create the top & bottom line
-      _framePath.hLine(at: dirtyRect.size.height, fromX: 0, toX: dirtyRect.size.width)
-      _framePath.hLine(at: 0, fromX: 0, toX: dirtyRect.size.width)
-      
-      // create the vertical hash marks
-      let segmentWidth = dirtyRect.size.width/CGFloat(_numberOfSegments)
-      _framePath.vLine(at: 0, fromY: dirtyRect.size.height - _barInset , toY: _barInset)
-      for i in 1..._numberOfSegments {
-        _framePath.vLine(at: segmentWidth * CGFloat(i), fromY: dirtyRect.size.height - _barInset, toY: _barInset)
-      }
-      _path.append(_framePath)
+    // set Line Width & Color
+    _framePath.lineWidth = _lineWidth
+    _frameColor.set()
+    
+    // create the top & bottom line
+    _framePath.hLine(at: dirtyRect.size.height, fromX: 0, toX: dirtyRect.size.width)
+    _framePath.hLine(at: 0, fromX: 0, toX: dirtyRect.size.width)
+    
+    // create the vertical hash marks
+    let segmentWidth = dirtyRect.size.width/CGFloat(_numberOfSegments)
+    _framePath.vLine(at: 0, fromY: dirtyRect.size.height - _barInset , toY: _barInset)
+    for i in 1..._numberOfSegments {
+      _framePath.vLine(at: segmentWidth * CGFloat(i), fromY: dirtyRect.size.height - _barInset, toY: _barInset)
     }
+    _path.append(_framePath)
 
-    let warningPosition = ((_warningLevel - _left) / _range)  * dirtyRect.size.width
-    let criticalPosition = ((_criticalLevel - _left) / _range)  * dirtyRect.size.width
+    
+    
+    
+    let levelPercent = ((level - _leftValue) / _range)
+    
+    
+    Swift.print("level = \(level), leftValue = \(_leftValue), range = \(_range), levelPercent = \(levelPercent), criticalPercent = \(_criticalPercent), warningPercent = \(_warningPercent)")
+    
     
     // create the bar
-    var remainingLevel = level
-    switch (isFlipped, remainingLevel) {
-    case (true, ..._criticalLevel):
+    var remainingPercent = levelPercent
+    switch remainingPercent {
+      
+    case _criticalPercent...:
       
       // append the critical section
-      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - criticalPosition
-      appendSection(at: criticalPosition, width: width, color: _criticalColor)
+      let width = ((remainingPercent - _criticalPercent) * dirtyRect.size.width)
+      appendSection(at: _criticalPosition, width: width, color: _criticalColor)
       
-      remainingLevel = _criticalLevel
+      remainingPercent = _criticalPercent
       fallthrough
       
-    case (true, _criticalLevel..._warningLevel):
+    case _warningPercent..._criticalPercent:
       
       // append the warning section
-      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - warningPosition
-      appendSection(at: warningPosition, width: width, color: _warningColor)
+      let width = (remainingPercent - _warningPercent) * dirtyRect.size.width
+      appendSection(at: _warningPosition, width: width, color: _warningColor)
       
-      remainingLevel = _warningLevel
+      remainingPercent = _warningPercent
       fallthrough
       
-    case (true, _warningLevel...):
-      
-      // append the normal section
-      let width = ((remainingLevel) / _range) * dirtyRect.size.width
-      appendSection(at: _zeroPoint, width: width, color: _normalColor)
-      
-    case (false, _criticalLevel...):
-      
-      // append the critical section
-      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width) - criticalPosition
-      appendSection(at: criticalPosition, width: width, color: _criticalColor)
-      
-      remainingLevel = _criticalLevel
-      fallthrough
-      
-    case (false, _warningLevel..._criticalLevel):
-      
-      // append the warning section
-      let width = (((remainingLevel - _left) / _range) * dirtyRect.size.width ) - warningPosition
-      appendSection(at: warningPosition, width: width, color: _warningColor)
-      
-      remainingLevel = _warningLevel
-      fallthrough
-      
-    case (false, ..._warningLevel):
-      
-      // append the normal section
-      let width = ((remainingLevel - _left) / _range) * dirtyRect.size.width
-      appendSection(at: _zeroPoint, width: width, color: _normalColor)
-      
-    default:  // should never occur
-      fatalError()
-    }
-    
-    var peakPosition : CGFloat = 0
-    var peakColor: NSColor
-
-    if _isFlipped {
-      peakPosition = ( max(peak, _left  + (0.005 * dirtyRect.size.width)) / _range ) * dirtyRect.size.width
-    } else {
-      peakPosition = ( min(peak, _right - (0.005 * dirtyRect.size.width)) / _range ) * dirtyRect.size.width
-    }
-    
-    Swift.print("left = \(_left), right = \(_right), peak = \(peak), peakPosition = \(peakPosition)")
-    
-    // determine the peak color
-    switch (_isFlipped, peak) {
-    case (true, ..._criticalLevel):
-      peakColor = _criticalColor
-    case (true, _criticalLevel..._warningLevel):
-      peakColor = _warningColor
-    
-    case (false, _criticalLevel...):
-      peakColor = _criticalColor
-    case (false, _warningLevel..._criticalLevel):
-      peakColor = _warningColor
-    
     default:
-      peakColor = _normalColor
+      
+      // append the normal section
+      let width = remainingPercent * dirtyRect.size.width
+      appendSection(at: 0, width: width, color: _normalColor)
     }
 
-    // append the peak section
-    appendSection(at: peakPosition, width: kPeakWidth, color: peakColor)
-    
+//    // flip (if needed)
+//    if _isFlipped {
+//      var transform = AffineTransform(translationByX: frame.size.width, byY: frame.size.height)
+//      transform.rotate(byDegrees: 180)
+//
+//      _path.transform(using: transform)
+//    }
+
     // draw & clear
     _path.stroke()
     _path.removeAllPoints()
@@ -229,17 +167,23 @@ class LevelIndicator: NSView {
   /// - Returns:            the filled NSBezierPath
   ///
   private func createBar(at rect: NSRect, color: NSColor) -> NSBezierPath {
-  
-    // create a path with the specified rect
-    let path = NSBezierPath(rect: rect)
     
+    // create a path with the specified rect
+    var path = NSBezierPath(rect: rect)
+
+    if _isFlipped {
+      var transform = AffineTransform(translationByX: frame.size.width, byY: frame.size.height)
+      transform.rotate(byDegrees: 180)
+      
+      path.transform(using: transform)
+    }
+
     // fill it with color
     color.setFill()
     path.fill()
     
     return path
-  }
-}
+  }}
 
 
 

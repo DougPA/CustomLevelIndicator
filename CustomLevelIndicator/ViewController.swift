@@ -50,13 +50,15 @@ class ViewController                        : NSViewController {
     
     _levelLabel.integerValue = Int(_level.floatValue)
     _peakLabel.integerValue = Int(_peak.floatValue)
-    draw(self)
+    _levelIndicator?.level = CGFloat(_level.floatValue)
+    _levelIndicator?.peak = CGFloat(_peak.floatValue)
   }
 
   @IBAction func peakSliderChanged(_ sender: NSSlider) {
     _levelLabel.integerValue = Int(_level.floatValue)
     _peakLabel.integerValue = Int(_peak.floatValue)
-    draw(self)
+    _levelIndicator?.level = CGFloat(_level.floatValue)
+    _levelIndicator?.peak = CGFloat(_peak.floatValue)
   }
   
  
@@ -64,21 +66,16 @@ class ViewController                        : NSViewController {
     
     _levelLabel2.integerValue = Int(_level2.floatValue)
     _peakLabel2.integerValue = Int(_peak2.floatValue)
-    draw(self)
+    _levelIndicator2?.level = CGFloat(_level2.floatValue)
+    _levelIndicator2?.peak = CGFloat(_peak2.floatValue)
   }
   
   @IBAction func peakSliderChanged2(_ sender: NSSlider) {
     _levelLabel2.integerValue = Int(_level2.floatValue)
     _peakLabel2.integerValue = Int(_peak2.floatValue)
-    draw(self)
-  }
-
-  
-  @IBAction func draw(_ sender: Any) {
-    
-    _levelIndicator?.level = CGFloat(_level.floatValue)
-    _levelIndicator?.peak = CGFloat(_peak.floatValue)
-  }
+    _levelIndicator2?.level = CGFloat(_level2.floatValue)
+    _levelIndicator2?.peak = CGFloat(_peak2.floatValue)
+  }  
 }
 
 
