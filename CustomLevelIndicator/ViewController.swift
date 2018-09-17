@@ -55,7 +55,7 @@ class ViewController                        : NSViewController {
       (8, "%2d", 80, -0.5),
       (10, "%3d", 100, -0.5),
       (12, "%3d", 120, -1),
-      (nil, "RF Pwr", 0, 0)
+      (nil, "RF Power", 0, 0)
     ]
     _levelIndicator.legends = [
       (0, "%2d", -25, 0),

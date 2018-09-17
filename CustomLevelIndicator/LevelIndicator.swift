@@ -82,7 +82,7 @@ class LevelIndicator: NSView {
   required init?(coder decoder: NSCoder) {
     super.init(coder: decoder)
 
-    assert(frame.size.height >= 15.0, "Frame height \(frame.size.height) < 15.0")
+    assert(frame.height >= 15.0, "Frame height \(frame.height) < 15.0")
   }
   
   override func viewWillDraw() {
@@ -97,46 +97,66 @@ class LevelIndicator: NSView {
     _heightFont = "-000".size(withAttributes: _attributes).height
 
     // calculate sizes
-    _heightTopSpace = frame.size.height * 0.1
-    _heightGraph = frame.size.height - _heightFont - _heightTopSpace
+    _heightTopSpace = frame.height * 0.1
+    _heightGraph = frame.height - _heightFont - _heightTopSpace
     _heightLine = _heightGraph * 0.1
     _heightInset = _heightLine
     _heightBar = _heightGraph - _heightLine - _heightInset - (2 * _heightLine)
     _barBottomY = _heightInset + _heightLine
     _barTopY = _barBottomY + _heightBar
     
-    _fontY = frame.size.height - _heightFont - _heightTopSpace
-    _topLineY = frame.size.height - _heightFont - _heightTopSpace
+    _fontY = frame.height - _heightFont - _heightTopSpace
+    _topLineY = frame.height - _heightFont - _heightTopSpace
     _bottomLineY = 0
 
     _range = _rightValue - _leftValue
     _warningPercent = ((_warningLevel - _leftValue) / _range)
-    _warningPosition = _warningPercent * frame.size.width
+    _warningPosition = _warningPercent * frame.width
     _criticalPercent = ((_criticalLevel - _leftValue) / _range)
-    _criticalPosition = _criticalPercent * frame.size.width
+    _criticalPosition = _criticalPercent * frame.width
     
     if _isFlipped {
       // create a transform
-      _transform = AffineTransform(translationByX: frame.size.width, byY: frame.size.height - _heightFont - _heightTopSpace)
+      _transform = AffineTransform(translationByX: frame.width, byY: frame.height - _heightFont - _heightTopSpace)
       _transform.rotate(byDegrees: 180)
     }
   }
-
+  
   // ----------------------------------------------------------------------------
   // MARK: - Overridden Methods
   
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
 
-    // ----- create the frame -----
+    drawFrame(dirtyRect)
+
+    setupBar(dirtyRect)
+
+    setupPeak(dirtyRect)
+
+    // draw the Bar & Peak
+    _path.stroke()
+    _path.removeAllPoints()
+
+    drawLegends(legends)
+  }
+  
+  // ----------------------------------------------------------------------------
+  // MARK: - Private Methods
+  
+  /// Setup the meter frame
+  ///
+  /// - Parameter dirtyRect:          LevelIndicator rect
+  ///
+  fileprivate func drawFrame(_ dirtyRect: NSRect) {
     
     // set Line Width & Color
     _framePath.lineWidth = _heightLine
     
     // create the top & bottom line
     _criticalColor.set()
-    _framePath.hLine(at: _topLineY, fromX: _criticalPosition, toX: dirtyRect.size.width)
-    _framePath.hLine(at: _bottomLineY, fromX: _criticalPosition, toX: dirtyRect.size.width)
+    _framePath.hLine(at: _topLineY, fromX: _criticalPosition, toX: dirtyRect.width)
+    _framePath.hLine(at: _bottomLineY, fromX: _criticalPosition, toX: dirtyRect.width)
     
     // Flip if required
     if _isFlipped { _framePath.transform(using: _transform) }
@@ -154,25 +174,27 @@ class LevelIndicator: NSView {
     
     _framePath.stroke()
     _framePath.removeAllPoints()
-
+    
     // create the vertical hash marks
-    let segmentWidth = dirtyRect.size.width / CGFloat(_numberOfSegments)
+    let segmentWidth = dirtyRect.width / CGFloat(_numberOfSegments)
     var lineColor : NSColor
+    var xPosition : CGFloat
     for i in 0..._numberOfSegments {
-      let xPosition = segmentWidth * CGFloat(i)
+      xPosition = segmentWidth * CGFloat(i)
       // determine the line color
       switch xPosition {
-
+        
       case _criticalPosition...:
         lineColor = _criticalColor
-
+        
       default:
         lineColor = _frameColor
       }
       // create line with the required color
       lineColor.set()
       
-      if xPosition == 0 || xPosition == frame.size.width { _framePath.lineWidth = 3 * _heightLine } else { _framePath.lineWidth = _heightLine }
+      if xPosition == 0 { xPosition = _heightLine }
+      if xPosition == frame.width { xPosition = frame.width - _heightLine }
       _framePath.vLine(at: xPosition, fromY: _barTopY, toY: _barBottomY)
       
       // Flip if required
@@ -181,8 +203,13 @@ class LevelIndicator: NSView {
       _framePath.stroke()
       _framePath.removeAllPoints()
     }
-
-    // ----- create the bar -----
+  }
+  /// Setup the Bar
+  ///
+  /// - Parameter dirtyRect:          LevelIndicator rect
+  ///
+  fileprivate func setupBar(_ dirtyRect: NSRect) {
+    
     let levelPercent = ((level - _leftValue) / _range)
     
     _backgroundColor.set()
@@ -192,31 +219,35 @@ class LevelIndicator: NSView {
     switch remainingPercent {
       
     case _criticalPercent...:
-
+      
       // append the critical section
-      let width = ((remainingPercent - _criticalPercent) * dirtyRect.size.width)
+      let width = ((remainingPercent - _criticalPercent) * dirtyRect.width)
       appendSection(at: _criticalPosition, width: width, color: _criticalColor)
       
       remainingPercent = _criticalPercent
       fallthrough
       
     case _warningPercent..._criticalPercent:
-
+      
       // append the warning section
-      let width = (remainingPercent - _warningPercent) * dirtyRect.size.width
+      let width = (remainingPercent - _warningPercent) * dirtyRect.width
       appendSection(at: _warningPosition, width: width, color: _warningColor)
       
       remainingPercent = _warningPercent
       fallthrough
       
     default:
-
+      
       // append the normal section
-      let width = remainingPercent * dirtyRect.size.width
+      let width = remainingPercent * dirtyRect.width
       appendSection(at: 0, width: width, color: _normalColor)
     }
-
-    // ----- create the peak -----
+  }
+  /// Setup Peak
+  ///
+  /// - Parameter dirtyRect:          LevelIndicator rect
+  ///
+  fileprivate func setupPeak(_ dirtyRect: NSRect) {
     
     let peakPercent = ((peak - _leftValue) / _range)
     
@@ -224,10 +255,10 @@ class LevelIndicator: NSView {
     
     // determine the peak color
     switch peakPercent {
-    
+      
     case _criticalPercent...:
       peakColor = _criticalColor
-    
+      
     case _warningPercent..._criticalPercent:
       peakColor = _warningColor
       
@@ -236,21 +267,8 @@ class LevelIndicator: NSView {
     }
     
     // append the peak section
-    appendSection(at: peakPercent * dirtyRect.size.width, width: kPeakWidth, color: peakColor)
-
-    // ----- draw the frame, bar & peak -----
-    
-    _path.stroke()
-    _path.removeAllPoints()
-
-    // ----- draw the legend -----
-    
-    drawLegends(legends)
+    appendSection(at: peakPercent * dirtyRect.width, width: kPeakWidth, color: peakColor)
   }
-  
-  // ----------------------------------------------------------------------------
-  // MARK: - Private Methods
-  
   /// Create a section & append it
   ///
   /// - Parameters:
@@ -288,13 +306,13 @@ class LevelIndicator: NSView {
     
     return path
   }
-  /// Draw a legend at each vertical bar
+  /// Draw a legend at specified vertical bar(s)
   ///
   /// - Parameter legends:        an array of LegendTuple
   ///
   private func drawLegends(_ legends: [LegendTuple]) {
 
-    let segmentWidth = frame.size.width / CGFloat(_numberOfSegments)
+    let segmentWidth = frame.width / CGFloat(_numberOfSegments)
     
     // draw the legends
     for legend in legends {
@@ -313,7 +331,7 @@ class LevelIndicator: NSView {
         // NO, draw a centered legend
         let lineLabel = legend.format
         let width = lineLabel.size(withAttributes: _attributes).width
-        let xPosition = (frame.size.width / 2.0) - (width / 2.0)
+        let xPosition = (frame.width / 2.0) - (width / 2.0)
         lineLabel.draw(at: NSMakePoint(xPosition, _fontY), withAttributes: _attributes)
       }
     }
