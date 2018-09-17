@@ -44,10 +44,10 @@ class ViewController                        : NSViewController {
     _levelLabel2.integerValue = _level2.integerValue
     _peakLabel2.integerValue = _peak2.integerValue
     
-    // format, value, adjust
+    // tick, format, value, adjust
     //    where: adjust is the number of legend widths to move +/-
     //
-    //    last entry, if any, is a legend to be centered
+    //    tick == nil indicates a legend to be centered
     //
     _levelIndicator2.legends = [            // to skip a legend pass "" as the format
       (0, "%1d", 0, 0),

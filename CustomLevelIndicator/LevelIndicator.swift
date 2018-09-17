@@ -16,16 +16,8 @@ class LevelIndicator: NSView {
     didSet { needsDisplay = true } }        // force a redraw
   public var peak                           : CGFloat = 0.0 {
     didSet { needsDisplay = true } }        // force a redraw
-  
-  public var legends: [LegendTuple] = [
-    (0, "%1d", 0, 0),
-    (1, "%2d", 20, -0.5),
-    (2, "%2d", 20, -0.5),
-    (3, "%2d", 60, -0.50),
-    (4, "%2d", 80, -0.5),
-    (5, "%3d", 100, -1),
-    (nil, "RF Pwr", 0, 0)
-  ]
+  public var font                           = NSFont(name: "Monaco", size: 14.0)  
+  public var legends: [LegendTuple] = [ (nil, "Level", 0, 0) ]
   
 
   private var _path                         = NSBezierPath()
@@ -88,7 +80,7 @@ class LevelIndicator: NSView {
   override func viewWillDraw() {
     
     // setup the Legend font & size
-    _attributes[NSAttributedStringKey.font] = NSFont(name: "Monaco", size: 14.0)
+    _attributes[NSAttributedStringKey.font] = font
     
     // setup the Legend color
     _attributes[NSAttributedStringKey.foregroundColor] = NSColor.systemYellow
@@ -331,7 +323,7 @@ class LevelIndicator: NSView {
         // NO, draw a centered legend
         let lineLabel = legend.format
         let width = lineLabel.size(withAttributes: _attributes).width
-        let xPosition = (frame.width / 2.0) - (width / 2.0)
+        let xPosition = (frame.width / 2.0) - (width / 2.0) + (width * legend.fudge)
         lineLabel.draw(at: NSMakePoint(xPosition, _fontY), withAttributes: _attributes)
       }
     }
