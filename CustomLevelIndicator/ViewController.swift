@@ -44,24 +44,26 @@ class ViewController                        : NSViewController {
     _levelLabel2.integerValue = _level2.integerValue
     _peakLabel2.integerValue = _peak2.integerValue
     
-    _levelIndicator2.legends = [
-      ("%1d", 0, 0),
-      ("%2d", 20, -0.5),
-      ("%2d", 40, -0.5),
-      ("%2d", 60, -0.50),
-      ("%2d", 80, -0.5),
-      ("%3d", 100, -1)
+    // format, value, adjust
+    //    where: adjust is the number of legend widths to move +/-
+    //
+    //    last entry, if any, is a legend to be centered
+    //
+    _levelIndicator2.legends = [            // to skip a legend pass "" as the format
+      (0, "%1d", 0, 0),
+      (4, "%2d", 40, -0.5),
+      (8, "%2d", 80, -0.5),
+      (10, "%3d", 100, -0.5),
+      (12, "%3d", 120, -1),
+      (nil, "RF Pwr", 0, 0)
     ]
     _levelIndicator.legends = [
-      ("%2d", -25, 0),
-      ("%2d", -20, -0.5),
-      ("%2d", -15, -0.5),
-      ("%2d", -10, -0.50),
-      ("%2d", -5, -0.5),
-      ("%3d", 0, -1)
+      (0, "%2d", -25, 0),
+      (1, "%2d", -20, -0.5),
+      (4, "%2d", -5, -0.5),
+      (5, "%3d", 0, -1),
+      (nil, "Compression", 0, 0)
     ]
-
-
   }
 
   @IBAction func sliderChanged(_ sender: NSSlider) {

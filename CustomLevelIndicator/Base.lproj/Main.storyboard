@@ -787,19 +787,19 @@
                                             <rect key="frame" x="20" y="34" width="472" height="40"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="12"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
-                                                    <real key="value" value="80"/>
+                                                    <real key="value" value="90"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_criticalLevel">
-                                                    <real key="value" value="90"/>
+                                                    <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_leftValue">
                                                     <real key="value" value="0.0"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_rightValue">
-                                                    <real key="value" value="100"/>
+                                                    <real key="value" value="120"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="NO"/>
                                             </userDefinedRuntimeAttributes>
@@ -816,14 +816,14 @@
                             </box>
                             <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yw3-Kn-7cp">
                                 <rect key="frame" x="256" y="61" width="128" height="19"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-10" maxValue="110" tickMarkPosition="above" sliderType="linear" id="ID1-jk-U4c"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-10" maxValue="120" tickMarkPosition="above" sliderType="linear" id="ID1-jk-U4c"/>
                                 <connections>
                                     <action selector="sliderChanged2:" target="XfG-lQ-9wD" id="bov-yV-hU8"/>
                                 </connections>
                             </slider>
                             <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9a9-DS-37g">
                                 <rect key="frame" x="18" y="61" width="128" height="19"/>
-                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-10" maxValue="110" tickMarkPosition="above" sliderType="linear" id="Ufg-Fy-TPC"/>
+                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="-10" maxValue="130" tickMarkPosition="above" sliderType="linear" id="Ufg-Fy-TPC"/>
                                 <connections>
                                     <action selector="peakSliderChanged2:" target="XfG-lQ-9wD" id="8vs-FS-HXN"/>
                                 </connections>
