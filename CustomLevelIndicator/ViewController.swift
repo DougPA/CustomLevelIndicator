@@ -43,6 +43,24 @@ class ViewController                        : NSViewController {
     _peakLabel.integerValue = _peak.integerValue
     _levelLabel2.integerValue = _level2.integerValue
     _peakLabel2.integerValue = _peak2.integerValue
+    
+    _levelIndicator2.legends = [
+      ("%1d", 0, 0),
+      ("%2d", 20, -0.5),
+      ("%2d", 40, -0.5),
+      ("%2d", 60, -0.50),
+      ("%2d", 80, -0.5),
+      ("%3d", 100, -1)
+    ]
+    _levelIndicator.legends = [
+      ("%2d", -25, 0),
+      ("%2d", -20, -0.5),
+      ("%2d", -15, -0.5),
+      ("%2d", -10, -0.50),
+      ("%2d", -5, -0.5),
+      ("%3d", 0, -1)
+    ]
+
 
   }
 
@@ -61,7 +79,6 @@ class ViewController                        : NSViewController {
     _levelIndicator?.peak = CGFloat(_peak.floatValue)
   }
   
- 
   @IBAction func sliderChanged2(_ sender: NSSlider) {
     
     _levelLabel2.integerValue = Int(_level2.floatValue)

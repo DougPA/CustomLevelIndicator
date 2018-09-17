@@ -4,7 +4,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -747,50 +746,11 @@
                                     <rect key="frame" x="1" y="1" width="512" height="83"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <stackView distribution="equalSpacing" orientation="horizontal" alignment="centerY" spacing="154" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vEB-rY-6dW">
-                                            <rect key="frame" x="20" y="60" width="469" height="17"/>
-                                            <subviews>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xwL-yk-dMG">
-                                                    <rect key="frame" x="-2" y="0.0" width="44" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="-25Db" id="5Rj-J6-uB3">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wTv-aO-GcL">
-                                                    <rect key="frame" x="192" y="0.0" width="88" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Compression" id="des-2g-sEH">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="awV-Ky-ljm">
-                                                    <rect key="frame" x="430" y="0.0" width="41" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="        0" id="L6V-mz-d7K">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                            </subviews>
-                                            <visibilityPriorities>
-                                                <integer value="1000"/>
-                                                <integer value="1000"/>
-                                                <integer value="1000"/>
-                                            </visibilityPriorities>
-                                            <customSpacing>
-                                                <real value="3.4028234663852886e+38"/>
-                                                <real value="3.4028234663852886e+38"/>
-                                                <real value="3.4028234663852886e+38"/>
-                                            </customSpacing>
-                                        </stackView>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Lwd-SI-AWA" customClass="LevelIndicator" customModule="CustomLevelIndicator" customModuleProvider="target">
-                                            <rect key="frame" x="20" y="31" width="472" height="25"/>
+                                            <rect key="frame" x="20" y="43" width="472" height="40"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
-                                                    <integer key="value" value="4"/>
+                                                    <integer key="value" value="5"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
                                                     <real key="value" value="-15"/>
@@ -809,12 +769,10 @@
                                         </customView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="vEB-rY-6dW" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" constant="6" id="28u-8q-caa"/>
-                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="vEB-rY-6dW" secondAttribute="bottom" constant="4" id="5Bw-dS-vST"/>
-                                        <constraint firstAttribute="bottom" secondItem="Lwd-SI-AWA" secondAttribute="bottom" constant="31" id="T0E-bi-xxZ"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="leading" secondItem="Wy1-qn-dtA" secondAttribute="leading" constant="20" symbolic="YES" id="7Q5-OF-JAS"/>
+                                        <constraint firstAttribute="bottom" secondItem="Lwd-SI-AWA" secondAttribute="bottom" constant="43" id="T0E-bi-xxZ"/>
                                         <constraint firstAttribute="trailing" secondItem="Lwd-SI-AWA" secondAttribute="trailing" constant="20" symbolic="YES" id="rmh-7c-HPS"/>
-                                        <constraint firstItem="vEB-rY-6dW" firstAttribute="leading" secondItem="Lwd-SI-AWA" secondAttribute="leading" id="woN-2k-S1a"/>
-                                        <constraint firstItem="vEB-rY-6dW" firstAttribute="leading" secondItem="Wy1-qn-dtA" secondAttribute="leading" constant="20" symbolic="YES" id="yDY-UB-XPY"/>
+                                        <constraint firstItem="Lwd-SI-AWA" firstAttribute="top" secondItem="Wy1-qn-dtA" secondAttribute="top" id="shf-4h-0Ad"/>
                                     </constraints>
                                 </view>
                                 <color key="fillColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -825,50 +783,11 @@
                                     <rect key="frame" x="1" y="1" width="512" height="74"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <stackView distribution="equalSpacing" orientation="horizontal" alignment="centerY" spacing="187" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rSO-U1-obh">
-                                            <rect key="frame" x="20" y="51" width="470" height="17"/>
-                                            <subviews>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nFv-U8-MZS">
-                                                    <rect key="frame" x="-2" y="0.0" width="13" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="0" id="Rdy-DH-yCS">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pt7-3d-xJs">
-                                                    <rect key="frame" x="194" y="0.0" width="40" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Level" id="wwX-a1-3Fa">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nim-wI-qiV">
-                                                    <rect key="frame" x="417" y="0.0" width="55" height="17"/>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="        100" id="9se-NI-d40">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                            </subviews>
-                                            <visibilityPriorities>
-                                                <integer value="1000"/>
-                                                <integer value="1000"/>
-                                                <integer value="1000"/>
-                                            </visibilityPriorities>
-                                            <customSpacing>
-                                                <real value="3.4028234663852886e+38"/>
-                                                <real value="3.4028234663852886e+38"/>
-                                                <real value="3.4028234663852886e+38"/>
-                                            </customSpacing>
-                                        </stackView>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="bzC-fn-vfx" customClass="LevelIndicator" customModule="CustomLevelIndicator" customModuleProvider="target">
-                                            <rect key="frame" x="20" y="20" width="472" height="25"/>
+                                            <rect key="frame" x="20" y="34" width="472" height="40"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_numberOfSegments">
-                                                    <integer key="value" value="4"/>
+                                                    <integer key="value" value="5"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_warningLevel">
                                                     <real key="value" value="80"/>
@@ -882,17 +801,15 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="_rightValue">
                                                     <real key="value" value="100"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="YES"/>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="_isFlipped" value="NO"/>
                                             </userDefinedRuntimeAttributes>
                                         </customView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="rSO-U1-obh" firstAttribute="top" secondItem="xnk-HK-Ta6" secondAttribute="top" constant="6" id="2Tk-Cm-NPS"/>
                                         <constraint firstAttribute="trailing" secondItem="bzC-fn-vfx" secondAttribute="trailing" constant="20" symbolic="YES" id="7Tp-m9-cNo"/>
-                                        <constraint firstItem="rSO-U1-obh" firstAttribute="leading" secondItem="bzC-fn-vfx" secondAttribute="leading" id="ES2-nw-HvF"/>
-                                        <constraint firstItem="rSO-U1-obh" firstAttribute="leading" secondItem="xnk-HK-Ta6" secondAttribute="leading" constant="20" symbolic="YES" id="gqc-0K-GsC"/>
-                                        <constraint firstItem="bzC-fn-vfx" firstAttribute="top" secondItem="rSO-U1-obh" secondAttribute="bottom" constant="6" id="ouU-jc-c8U"/>
-                                        <constraint firstAttribute="bottom" secondItem="bzC-fn-vfx" secondAttribute="bottom" constant="20" symbolic="YES" id="ubo-Jz-CYe"/>
+                                        <constraint firstItem="bzC-fn-vfx" firstAttribute="leading" secondItem="xnk-HK-Ta6" secondAttribute="leading" constant="20" symbolic="YES" id="BEF-CM-Sk8"/>
+                                        <constraint firstItem="bzC-fn-vfx" firstAttribute="top" secondItem="xnk-HK-Ta6" secondAttribute="top" id="saf-To-KWe"/>
+                                        <constraint firstAttribute="bottom" secondItem="bzC-fn-vfx" secondAttribute="bottom" constant="34" id="ubo-Jz-CYe"/>
                                     </constraints>
                                 </view>
                                 <color key="fillColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -967,10 +884,12 @@
                             <constraint firstItem="RYe-Jc-QIY" firstAttribute="baseline" secondItem="Njo-UG-wYA" secondAttribute="baseline" id="53h-8q-PLB"/>
                             <constraint firstItem="raS-7v-vKt" firstAttribute="leading" secondItem="Jzx-6j-Gqv" secondAttribute="trailing" constant="66" id="8Pd-fI-CHD"/>
                             <constraint firstItem="Jzx-6j-Gqv" firstAttribute="leading" secondItem="0LU-PY-PhR" secondAttribute="leading" id="9IN-sD-r4Q"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ITL-xj-9bK" secondAttribute="trailing" constant="20" symbolic="YES" id="9Lb-P8-kRd"/>
                             <constraint firstItem="RYe-Jc-QIY" firstAttribute="top" secondItem="ezP-U8-lD8" secondAttribute="bottom" constant="34" id="9tc-eJ-6G4"/>
                             <constraint firstItem="raS-7v-vKt" firstAttribute="centerX" secondItem="Z8N-7n-WR5" secondAttribute="centerX" id="CfE-Hz-h8H"/>
                             <constraint firstItem="ITL-xj-9bK" firstAttribute="baseline" secondItem="Z8N-7n-WR5" secondAttribute="baseline" id="Dhc-A2-dHY"/>
                             <constraint firstAttribute="trailing" secondItem="EAo-wg-Pgr" secondAttribute="trailing" constant="75" id="EzQ-N2-z4Q"/>
+                            <constraint firstAttribute="trailing" secondItem="1ma-n5-Pd0" secondAttribute="trailing" constant="75" id="F8R-Zw-Iwh"/>
                             <constraint firstItem="U6u-c7-cud" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="-3" id="HQg-3K-ouJ"/>
                             <constraint firstItem="0LU-PY-PhR" firstAttribute="baseline" secondItem="1ma-n5-Pd0" secondAttribute="baseline" id="Ivj-Gf-1Me"/>
                             <constraint firstItem="Jzx-6j-Gqv" firstAttribute="top" secondItem="U6u-c7-cud" secondAttribute="bottom" constant="30" id="KXy-e4-tQK"/>
@@ -981,10 +900,11 @@
                             <constraint firstItem="Jzx-6j-Gqv" firstAttribute="baseline" secondItem="EAo-wg-Pgr" secondAttribute="baseline" id="T7T-0a-suH"/>
                             <constraint firstItem="Jzx-6j-Gqv" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="112" id="Yjc-2p-OSF"/>
                             <constraint firstItem="U6u-c7-cud" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="2" id="bMV-SP-cD2"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0LU-PY-PhR" secondAttribute="trailing" constant="20" symbolic="YES" id="bgC-LP-YUi"/>
                             <constraint firstItem="EAo-wg-Pgr" firstAttribute="leading" secondItem="raS-7v-vKt" secondAttribute="trailing" constant="29" id="cMj-y6-Cii"/>
                             <constraint firstItem="raS-7v-vKt" firstAttribute="leading" secondItem="Yw3-Kn-7cp" secondAttribute="leading" id="dRr-Lo-65a"/>
                             <constraint firstItem="0LU-PY-PhR" firstAttribute="top" secondItem="ezP-U8-lD8" secondAttribute="bottom" constant="20" id="dqO-pC-Ybh"/>
-                            <constraint firstItem="EAo-wg-Pgr" firstAttribute="leading" secondItem="1ma-n5-Pd0" secondAttribute="leading" id="eCV-11-yB4"/>
+                            <constraint firstItem="EAo-wg-Pgr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ma-n5-Pd0" secondAttribute="leading" id="eCV-11-yB4"/>
                             <constraint firstItem="ezP-U8-lD8" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="flk-dp-SEs"/>
                             <constraint firstItem="9a9-DS-37g" firstAttribute="centerY" secondItem="0LU-PY-PhR" secondAttribute="centerY" id="k58-RA-rmZ"/>
                             <constraint firstItem="raS-7v-vKt" firstAttribute="trailing" secondItem="Yw3-Kn-7cp" secondAttribute="trailing" id="ku3-jq-AX6"/>
