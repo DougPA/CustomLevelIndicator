@@ -12,6 +12,7 @@
 		91A96E032144A8410076D2E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91A96E022144A8410076D2E5 /* Assets.xcassets */; };
 		91A96E062144A8410076D2E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 91A96E042144A8410076D2E5 /* Main.storyboard */; };
 		91A96E0F2144AC280076D2E5 /* LevelIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A96E0E2144AC280076D2E5 /* LevelIndicator.swift */; };
+		91D60773215291D900123D77 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 91D60772215291D900123D77 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		91A96E052144A8410076D2E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		91A96E072144A8410076D2E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91A96E0E2144AC280076D2E5 /* LevelIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelIndicator.swift; sourceTree = "<group>"; };
+		91D60772215291D900123D77 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 		91A96DF22144A83F0076D2E5 = {
 			isa = PBXGroup;
 			children = (
+				91D60772215291D900123D77 /* README.md */,
 				91A96DFD2144A83F0076D2E5 /* CustomLevelIndicator */,
 				91A96DFC2144A83F0076D2E5 /* Products */,
 			);
@@ -96,6 +99,7 @@
 				TargetAttributes = {
 					91A96DFA2144A83F0076D2E5 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -122,6 +126,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D60773215291D900123D77 /* README.md in Resources */,
 				91A96E032144A8410076D2E5 /* Assets.xcassets in Resources */,
 				91A96E062144A8410076D2E5 /* Main.storyboard in Resources */,
 			);
@@ -284,10 +289,11 @@
 					"@executable_path/../Frameworks",
 					"$(inherited)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.CustomLevelIndicator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -308,10 +314,11 @@
 					"@executable_path/../Frameworks",
 					"$(inherited)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.k3tzr.CustomLevelIndicator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
