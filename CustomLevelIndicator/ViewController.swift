@@ -50,19 +50,19 @@ class ViewController                        : NSViewController {
     //    tick == nil indicates a legend to be centered
     //
     _levelIndicator2.legends = [            // to skip a legend pass "" as the format
-      (0, "%1d", 0, 0),
-      (4, "%2d", 40, -0.5),
-      (8, "%2d", 80, -0.5),
-      (10, "%3d", 100, -0.5),
-      (12, "%3d", 120, -1),
-      (nil, "RF Power", 0, 0)
+      (0, "0", 0),
+      (4, "40", -0.5),
+      (8, "80", -0.5),
+      (10, "100", -0.5),
+      (12, "120", -1),
+      (nil, "RF Power", 0)
     ]
     _levelIndicator.legends = [
-      (0, "%2d", -25, 0),
-      (1, "%2d", -20, -0.5),
-      (4, "%2d", -5, -0.5),
-      (5, "%3d", 0, -1),
-      (nil, "Compression", 0, 0)
+      (0, "-25", 0),
+      (1, "-20", -0.5),
+      (4, "-5", -0.5),
+      (5, "0", -1),
+      (nil, "Compression", 0)
     ]
   }
 

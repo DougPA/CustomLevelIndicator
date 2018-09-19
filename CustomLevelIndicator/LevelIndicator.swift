@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public typealias LegendTuple = (tick: Int?, format: String, value: Int, fudge: CGFloat)
+public typealias LegendTuple = (tick: Int?, label: String, fudge: CGFloat)
 
 class LevelIndicator: NSView {
   
@@ -17,7 +17,7 @@ class LevelIndicator: NSView {
   public var peak                           : CGFloat = 0.0 {
     didSet { needsDisplay = true } }        // force a redraw
   public var font                           = NSFont(name: "Monaco", size: 14.0)  
-  public var legends: [LegendTuple] = [ (nil, "Level", 0, 0) ]
+  public var legends: [LegendTuple] = [ (nil, "Level", 0) ]
   
 
   private var _path                         = NSBezierPath()
@@ -25,8 +25,8 @@ class LevelIndicator: NSView {
 
   // layout
   @IBInspectable var _numberOfSegments      : Int = 4
-  @IBInspectable var _leftValue             : CGFloat = 0
-  @IBInspectable var _rightValue            : CGFloat = 100
+  @IBInspectable var _leftValue             : CGFloat = 0         // left before being flipped
+  @IBInspectable var _rightValue            : CGFloat = 100       // right before being flipped
   @IBInspectable var _warningLevel          : CGFloat = 80
   @IBInspectable var _criticalLevel         : CGFloat = 90
   @IBInspectable var _isFlipped             : Bool = false
@@ -47,7 +47,7 @@ class LevelIndicator: NSView {
   private var _transform                    : AffineTransform!
 
   // font related
-  private var _attributes                   = [NSAttributedStringKey:AnyObject]()
+  private var _attributes                   = [NSAttributedString.Key:AnyObject]()
   
   // calculated sizes
   private var _heightGraph                  : CGFloat = 0
@@ -80,10 +80,10 @@ class LevelIndicator: NSView {
   override func viewWillDraw() {
     
     // setup the Legend font & size
-    _attributes[NSAttributedStringKey.font] = font
+    _attributes[NSAttributedString.Key.font] = font
     
     // setup the Legend color
-    _attributes[NSAttributedStringKey.foregroundColor] = NSColor.systemYellow
+    _attributes[NSAttributedString.Key.foregroundColor] = NSColor.systemYellow
     
     // calculate a typical font height
     _heightFont = "-000".size(withAttributes: _attributes).height
@@ -100,17 +100,25 @@ class LevelIndicator: NSView {
     _fontY = frame.height - _heightFont - _heightTopSpace
     _topLineY = frame.height - _heightFont - _heightTopSpace
     _bottomLineY = 0
+    
+    // create a transform (if flipped)
+    if _isFlipped {
+      _transform = AffineTransform(translationByX: frame.width, byY: frame.height - _heightFont - _heightTopSpace)
+      _transform.rotate(byDegrees: 180)
+    }
 
+    // calculate percents & positions
     _range = _rightValue - _leftValue
     _warningPercent = ((_warningLevel - _leftValue) / _range)
     _warningPosition = _warningPercent * frame.width
     _criticalPercent = ((_criticalLevel - _leftValue) / _range)
     _criticalPosition = _criticalPercent * frame.width
     
-    if _isFlipped {
-      // create a transform
-      _transform = AffineTransform(translationByX: frame.width, byY: frame.height - _heightFont - _heightTopSpace)
-      _transform.rotate(byDegrees: 180)
+    // validate the positions
+    if _leftValue < _rightValue {
+      assert(_warningLevel - _leftValue <= _criticalLevel - _leftValue, "Invalid layout")
+    } else {
+      assert(_warningLevel - _leftValue >= _criticalLevel - _leftValue, "Invalid layout")
     }
   }
   
@@ -127,8 +135,7 @@ class LevelIndicator: NSView {
     setupPeak(dirtyRect)
 
     // draw the Bar & Peak
-    _path.stroke()
-    _path.removeAllPoints()
+    _path.strokeRemove()
 
     drawLegends(legends)
   }
@@ -142,10 +149,10 @@ class LevelIndicator: NSView {
   ///
   fileprivate func drawFrame(_ dirtyRect: NSRect) {
     
-    // set Line Width & Color
+    // set Line Width
     _framePath.lineWidth = _heightLine
     
-    // create the top & bottom line
+    // create the top & bottom line (critical range)
     _criticalColor.set()
     _framePath.hLine(at: _topLineY, fromX: _criticalPosition, toX: dirtyRect.width)
     _framePath.hLine(at: _bottomLineY, fromX: _criticalPosition, toX: dirtyRect.width)
@@ -153,10 +160,9 @@ class LevelIndicator: NSView {
     // Flip if required
     if _isFlipped { _framePath.transform(using: _transform) }
     
-    _framePath.stroke()
-    _framePath.removeAllPoints()
-    
-    // create the top & bottom line
+    _framePath.strokeRemove()
+
+    // create the top & bottom line (normal & warning range)
     _frameColor.set()
     _framePath.hLine(at: _topLineY, fromX: 0, toX: _criticalPosition)
     _framePath.hLine(at: _bottomLineY, fromX: 0, toX: _criticalPosition)
@@ -164,8 +170,7 @@ class LevelIndicator: NSView {
     // Flip if required
     if _isFlipped { _framePath.transform(using: _transform) }
     
-    _framePath.stroke()
-    _framePath.removeAllPoints()
+    _framePath.strokeRemove()
     
     // create the vertical hash marks
     let segmentWidth = dirtyRect.width / CGFloat(_numberOfSegments)
@@ -192,8 +197,7 @@ class LevelIndicator: NSView {
       // Flip if required
       if _isFlipped { _framePath.transform(using: _transform) }
       
-      _framePath.stroke()
-      _framePath.removeAllPoints()
+      _framePath.strokeRemove()
     }
   }
   /// Setup the Bar
@@ -314,17 +318,15 @@ class LevelIndicator: NSView {
         let xPosition = CGFloat(tick) * segmentWidth
         
         // format & draw the legend
-        let lineLabel = String(format: legend.format, legend.value )
-        let width = lineLabel.size(withAttributes: _attributes).width
-        lineLabel.draw(at: NSMakePoint(xPosition + (width * legend.fudge), _fontY), withAttributes: _attributes)
+        let width = legend.label.size(withAttributes: _attributes).width
+        legend.label.draw(at: NSMakePoint(xPosition + (width * legend.fudge), _fontY), withAttributes: _attributes)
         
       } else {
         
         // NO, draw a centered legend
-        let lineLabel = legend.format
-        let width = lineLabel.size(withAttributes: _attributes).width
+        let width = legend.label.size(withAttributes: _attributes).width
         let xPosition = (frame.width / 2.0) - (width / 2.0) + (width * legend.fudge)
-        lineLabel.draw(at: NSMakePoint(xPosition, _fontY), withAttributes: _attributes)
+        legend.label.draw(at: NSMakePoint(xPosition, _fontY), withAttributes: _attributes)
       }
     }
   }
@@ -358,5 +360,11 @@ extension NSBezierPath {
     
     move( to: NSMakePoint( x, y1) )
     line( to: NSMakePoint( x, y2 ) )
+  }
+  /// Stroke and then Remove all points
+  ///
+  func strokeRemove() {
+    stroke()
+    removeAllPoints()
   }
 }
