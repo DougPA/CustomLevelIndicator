@@ -2,8 +2,8 @@
 ## Level indicator similar to the one used in SmartSDR (TM)
 
 ### Built on:
-*  macOS 10.13.6 (Deployment Target of macOS 10.10)
-*  Xcode 10 (10A255)
+*  macOS 10.14.1 (Deployment Target of macOS 10.10)
+*  Xcode 10 (10B61)
 *  Swift 4.2
 
 
